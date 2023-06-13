@@ -35,10 +35,10 @@ stages:
       inputs:
         deploymentScope: 'Resource Group'
         azureResourceManagerConnection: 'azureconn'
-        subscriptionId: 'dbdcf2e9-3d4a-48c4-b9f5-cc4e9a3d6123'
+        subscriptionId: '$(subscriptionId)'
         action: 'Create Or Update Resource Group'
         resourceGroupName: 'testRG'
-        location: 'East US'
+        location: '$(location)'
         templateLocation: 'Linked artifact'
         csmFile: '$(templateFile)'
         deploymentMode: 'Incremental'
