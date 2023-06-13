@@ -14,11 +14,11 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  resource-group: 'AZ400-EWebShop-NAME'
-  location: 'westeurope'
+  resource-group: 'testRG'
+  location: 'eastus'
   templateFile: '.azure/bicep/acr.bicep'
-  azureserviceconnection: 'azure subs'
-  subscriptionId: 'YOUR-SUBSCRIPTION-ID'
+  azureserviceconnection: 'azureconn'
+  subscriptionId: 'dbdcf2e9-3d4a-48c4-b9f5-cc4e9a3d6123'
 
 stages:
 - stage: Build
@@ -26,6 +26,7 @@ stages:
   jobs:
   - job: Build
     pool:
+      name: Default
       vmImage: ubuntu-latest
     steps:
     #Create ACR to keep docker images
@@ -33,11 +34,11 @@ stages:
       displayName: Deploy ACR Bicep
       inputs:
         deploymentScope: 'Resource Group'
-        azureResourceManagerConnection: $(azureserviceconnection)
-        subscriptionId: $(subscriptionId)
+        azureResourceManagerConnection: 'azureconn'
+        subscriptionId: 'dbdcf2e9-3d4a-48c4-b9f5-cc4e9a3d6123'
         action: 'Create Or Update Resource Group'
-        resourceGroupName: '$(resource-group)'
-        location: '$(location)'
+        resourceGroupName: 'testRG'
+        location: 'East US'
         templateLocation: 'Linked artifact'
         csmFile: '$(templateFile)'
         deploymentMode: 'Incremental'
@@ -58,10 +59,9 @@ stages:
       displayName: Build Docker Compose
       inputs:
         containerregistrytype: 'Azure Container Registry'
-        azureSubscription: '$(azureserviceconnection)'
+        azureSubscription: 'azureconn'
         azureContainerRegistry: '$(acrloginserver)'
         dockerComposeFile: '**/docker-compose.yml'
-        projectName: 
         action: 'Build services'
         additionalImageTags: '$(Build.BuildNumber)'
         includeLatestTag: true
